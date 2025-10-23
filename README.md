@@ -42,7 +42,7 @@ cp env.example .env
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **MinIO API** : http://localhost:9000
 - **ngrok Dashboard** : http://localhost:4040
-- **Public URL** : https://ashely-unreflecting-franklin.ngrok-free.dev
+- **Public URL** : Check ngrok dashboard for your unique URL
 
 ## 🌐 Usage
 
@@ -104,9 +104,23 @@ Make sure MinIO is configured with:
 
 1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
-3. **Scan with mobile** : Works from anywhere via https://ashely-unreflecting-franklin.ngrok-free.dev
+3. **Scan with mobile** : Works from anywhere via your ngrok URL
+4. **Find your ngrok URL** : Check http://localhost:4040
 
 QR codes automatically use the public ngrok URL for optimal mobile access.
+
+### Finding Your ngrok URL
+
+After starting the application, you can find your unique ngrok URL by:
+
+1. **ngrok Dashboard** : http://localhost:4040
+2. **API endpoint** : `curl http://localhost:4040/api/tunnels`
+3. **QR codes page** : http://localhost:8000/qr-codes (shows the URL)
+
+Each ngrok account gets a unique URL like:
+- `https://abc123.ngrok-free.dev`
+- `https://xyz789.ngrok-free.dev`
+- etc.
 
 ## 🛠️ Useful Scripts
 

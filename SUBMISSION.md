@@ -55,13 +55,14 @@ cp env.example .env
 - **VoD Application** : http://localhost
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **ngrok Dashboard** : http://localhost:4040
-- **Public URL** : https://ashely-unreflecting-franklin.ngrok-free.dev
+- **Public URL** : Check ngrok dashboard for your unique URL
 
 ## 📱 Mobile Access
 
 1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
-3. **Scan with mobile** : Works from anywhere via https://ashely-unreflecting-franklin.ngrok-free.dev
+3. **Scan with mobile** : Works from anywhere via your ngrok URL
+4. **Find your ngrok URL** : Check http://localhost:4040
 
 ## 🎓 Technical Learnings
 
