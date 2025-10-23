@@ -1,203 +1,101 @@
-# Soumission Projet VoD - ICT3
+# VoD Project Submission - ICT3
 
-## 👥 Membres de l'équipe
-- **Charles Pelong** - Développeur Full-Stack
+## 👥 Team Members
+- **Charles Pelong** - Full-Stack Developer
 
-## 📋 Description du projet
+## 📋 Project Description
 
-**Application VoD (Video on Demand)** - Plateforme de streaming vidéo complète développée avec FastAPI, MinIO et Docker.
+**VoD (Video on Demand) Application** - Modern video streaming platform with Docker and mobile access via QR codes.
 
-### Objectifs
-- Créer une application web moderne pour le streaming vidéo
-- Implémenter un système de stockage distribué avec MinIO
-- Développer une interface utilisateur responsive
-- Intégrer un système QR codes pour l'accès mobile
-- Containeriser l'application avec Docker
-
-## 🎯 Fonctionnalités implémentées
+## 🎯 Main Features
 
 ### ✅ Backend (FastAPI)
-- **API REST complète** : Endpoints pour gestion des vidéos
-- **Streaming optimisé** : Support des Range headers pour lecture progressive
-- **Upload de fichiers** : Drag & drop avec validation
-- **Génération QR codes** : Accès mobile simplifié
-- **Intégration MinIO** : Stockage distribué sécurisé
+- **REST API** : Complete video management
+- **Optimized streaming** : Progressive playback with Range headers
+- **Drag & drop upload** : Intuitive interface
+- **Automatic QR codes** : Simplified mobile access
+- **MinIO storage** : S3-compatible
 
 ### ✅ Frontend (HTML5)
-- **Interface moderne** : Design responsive et intuitif
-- **Lecteur vidéo HTML5** : Streaming natif
-- **Upload drag & drop** : Interface utilisateur avancée
-- **QR codes intégrés** : Affichage sous chaque vidéo
-- **Statistiques temps réel** : Monitoring des performances
+- **Modern interface** : Responsive design
+- **Native HTML5 video player** : Native streaming
+- **Intuitive upload** : Drag & drop with validation
+- **Integrated QR codes** : Display under each video
 
 ### ✅ Infrastructure (Docker)
-- **Containerisation complète** : MinIO + Application + Nginx
-- **Orchestration Docker Compose** : Déploiement simplifié
-- **Reverse proxy Nginx** : Optimisation des performances
-- **Volumes persistants** : Sauvegarde des données
-- **Health checks** : Monitoring automatique
+- **Complete containerization** : MinIO + FastAPI + Nginx
+- **Simplified deployment** : Single startup script
+- **Mobile access** : ngrok for public QR codes
+- **Automatic creation** : MinIO bucket created on startup
 
-## 🛠️ Technologies utilisées
+## 🛠️ Technologies
 
-### Backend
-- **FastAPI** : Framework web moderne et performant
-- **MinIO** : Stockage objet compatible S3
-- **Python 3.11** : Langage de programmation
-- **Uvicorn** : Serveur ASGI
+- **Backend** : FastAPI, Python 3.11, MinIO
+- **Frontend** : HTML5, CSS3, JavaScript
+- **Infrastructure** : Docker, Docker Compose, Nginx
+- **Mobile** : ngrok, QR codes
 
-### Frontend
-- **HTML5** : Structure sémantique
-- **CSS3** : Styles modernes et animations
-- **JavaScript ES6+** : Logique interactive
-- **QR Code API** : Génération de codes QR
+## 🚀 Installation and Usage
 
-### Infrastructure
-- **Docker** : Containerisation
-- **Docker Compose** : Orchestration multi-services
-- **Nginx** : Reverse proxy et load balancing
-- **MinIO** : Stockage distribué
+### Prerequisites
+- Docker
+- ngrok (for mobile access)
 
-### Outils de développement
-- **Git** : Contrôle de version
-- **ngrok** : Tunneling pour tests mobiles
-- **PIL/Pillow** : Traitement d'images QR
-
-## 📊 Architecture technique
-
-### Diagramme de l'architecture
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Client Web    │    │   Client Mobile │    │   Client QR     │
-│   (Desktop)     │    │   (Smartphone)  │    │   (Scanner)     │
-└─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
-          │                      │                      │
-          └──────────────────────┼──────────────────────┘
-                                 │
-                    ┌─────────────▼─────────────┐
-                    │        Nginx              │
-                    │    (Reverse Proxy)         │
-                    └─────────────┬─────────────┘
-                                  │
-                    ┌─────────────▼─────────────┐
-                    │      FastAPI App           │
-                    │   (VoD Application)       │
-                    └─────────────┬─────────────┘
-                                  │
-                    ┌─────────────▼─────────────┐
-                    │        MinIO             │
-                    │   (Object Storage)       │
-                    └───────────────────────────┘
-```
-
-### Flux de données
-1. **Upload** : Client → Nginx → FastAPI → MinIO
-2. **Streaming** : MinIO → FastAPI → Nginx → Client
-3. **QR Codes** : FastAPI génère → Client affiche
-4. **Métadonnées** : MinIO → FastAPI → Client
-
-## 🧪 Tests et validation
-
-### Tests fonctionnels
-- ✅ **Upload de vidéos** : Formats MP4, AVI, MOV supportés
-- ✅ **Streaming vidéo** : Lecture fluide sur desktop et mobile
-- ✅ **QR codes** : Génération et scan fonctionnels
-- ✅ **Interface responsive** : Compatible desktop/mobile
-- ✅ **Docker** : Déploiement containerisé réussi
-
-### Tests de performance
-- ✅ **Streaming optimisé** : Chunks de 256KB pour ngrok
-- ✅ **Range headers** : Support lecture partielle
-- ✅ **Caching** : Headers appropriés pour navigateurs
-- ✅ **Concurrence** : Support multi-utilisateurs
-
-### Tests d'intégration
-- ✅ **MinIO** : Connexion et stockage fonctionnels
-- ✅ **Nginx** : Reverse proxy opérationnel
-- ✅ **Docker Compose** : Orchestration réussie
-- ✅ **Health checks** : Monitoring automatique
-
-## 📈 Résultats obtenus
-
-### Performance
-- **Temps de démarrage** : < 30 secondes avec Docker
-- **Streaming** : Lecture instantanée des vidéos
-- **Upload** : Support fichiers jusqu'à 100MB
-- **QR codes** : Génération en < 1 seconde
-
-### Utilisabilité
-- **Interface intuitive** : Navigation simple
-- **Responsive design** : Compatible tous écrans
-- **Upload drag & drop** : Expérience utilisateur moderne
-- **Accès mobile** : QR codes pour smartphone
-
-### Robustesse
-- **Gestion d'erreurs** : Messages clairs et informatifs
-- **Validation** : Contrôles côté client et serveur
-- **Sécurité** : URLs signées MinIO
-- **Monitoring** : Health checks automatiques
-
-## 🚀 Déploiement
-
-### Environnement de développement
+### Startup
 ```bash
-# Démarrage rapide
+# 1. Start the application
 ./scripts/docker-start.sh
 
-# Accès
-http://localhost (Application)
-http://localhost/minio/ (MinIO Console)
+# 2. Start ngrok (for mobile)
+./scripts/start-ngrok.sh
+
+# 3. Access the interface
+# http://localhost (via Nginx)
+# http://localhost:8000 (direct FastAPI)
 ```
 
-### Production
-- **Docker Compose** : Déploiement simplifié
-- **Volumes persistants** : Sauvegarde automatique
-- **Configuration** : Variables d'environnement
-- **Monitoring** : Logs centralisés
+### Available Services
+- **VoD Application** : http://localhost
+- **MinIO Console** : http://localhost/minio/ (admin/admin123)
+- **ngrok Dashboard** : http://localhost:4040
 
-## 📚 Documentation
+## 📱 Mobile Access
 
-### Fichiers de documentation
-- **README.md** : Guide principal d'utilisation
-- **docs/TECHNICAL.md** : Documentation technique détaillée
-- **docs/DOCKER.md** : Guide de déploiement Docker
-- **config.env** : Configuration centralisée
+1. **Start ngrok** : `./scripts/start-ngrok.sh`
+2. **Access QR codes** : http://localhost:8000/qr-codes
+3. **Scan with mobile** : Works from anywhere!
 
-### Code source
-- **Commentaires** : Code documenté et lisible
-- **Structure** : Organisation modulaire
-- **Standards** : Respect des bonnes pratiques Python
-- **Git** : Historique de développement complet
+## 🎓 Technical Learnings
 
-## 🎓 Apprentissages
+### Development
+- **FastAPI** : Modern APIs with automatic documentation
+- **MinIO** : Distributed storage and streaming
+- **Docker** : Containerization and orchestration
+- **QR Codes** : Mobile integration
 
-### Techniques
-- **FastAPI** : Développement d'APIs modernes
-- **MinIO** : Stockage distribué et streaming
-- **Docker** : Containerisation et orchestration
-- **QR Codes** : Intégration mobile
+### Architecture
+- **Microservices** : MinIO/App/Nginx separation
+- **Streaming** : Optimization for video playback
+- **Mobile-first** : QR codes for universal access
+- **DevOps** : Automated deployment
 
-### Méthodologiques
-- **Développement itératif** : Tests fréquents et ajustements
-- **Documentation** : Importance de la documentation technique
-- **Containerisation** : Simplification du déploiement
-- **Architecture** : Séparation des responsabilités
+## 📊 Results
 
-## 🔮 Perspectives d'évolution
+- ✅ **Functional application** : Streaming, upload, QR codes
+- ✅ **Simplified deployment** : One script to start everything
+- ✅ **Mobile access** : QR codes with ngrok
+- ✅ **Robust architecture** : Docker + health checks
+- ✅ **Modern interface** : Responsive and intuitive design
 
-### Fonctionnalités futures
-- **Authentification** : Système de login utilisateur
-- **Streaming avancé** : HLS/DASH pour qualité adaptative
-- **Interface admin** : Gestion avancée des vidéos
-- **Métadonnées** : Extraction automatique des informations
+## 🔮 Future Perspectives
 
-### Améliorations techniques
-- **Cache Redis** : Optimisation des performances
-- **CDN** : Distribution mondiale du contenu
-- **Monitoring** : Métriques avancées
-- **Tests automatisés** : CI/CD pipeline
+- **Authentication** : User login system
+- **Advanced streaming** : HLS/DASH for adaptive quality
+- **Admin interface** : Advanced video management
+- **Metadata** : Automatic information extraction
 
 ---
 
-**Date de soumission** : $(date)  
+**Submission Date** : $(date)  
 **Version** : 1.0  
-**Statut** : ✅ Fonctionnel et déployable
+**Status** : ✅ Functional and deployable

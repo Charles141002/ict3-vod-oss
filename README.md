@@ -1,116 +1,123 @@
 # VoD App - Video on Demand
 
-Une application web complète pour le streaming de vidéos avec FastAPI et MinIO.
+A complete web application for video streaming with FastAPI and MinIO.
 
-## 🚀 Fonctionnalités
+## 🚀 Features
 
-- **Backend FastAPI** : API REST pour gérer les vidéos
-- **Frontend HTML5** : Interface utilisateur moderne et responsive
-- **Streaming vidéo** : Lecture directe depuis MinIO
-- **Gestion des métadonnées** : Informations sur les fichiers vidéo
-- **Interface intuitive** : Design moderne avec statistiques
+- **FastAPI Backend** : REST API for video management
+- **HTML5 Frontend** : Modern and responsive user interface
+- **Video streaming** : Direct playback from MinIO
+- **Metadata management** : Video file information
+- **Intuitive interface** : Modern design with statistics
 
-## 📋 Prérequis
+## 📋 Prerequisites
 
-- Python 3.8+
-- MinIO en cours d'exécution sur `localhost:9000`
-- Bucket `videos` créé dans MinIO
+- **Docker** : For the complete application
+- **ngrok** : For mobile access (optional)
+
+### Installing ngrok
+
+**macOS :**
+```bash
+brew install ngrok/ngrok/ngrok
+```
+
+**Linux :**
+```bash
+curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+echo 'deb https://ngrok-agent.s3.amazonaws.com buster main' | sudo tee /etc/apt/sources.list.d/ngrok.list
+sudo apt update && sudo apt install ngrok
+```
+
+**Windows :**
+Download from [ngrok.com/download](https://ngrok.com/download)
 
 ## 🛠️ Installation
 
-### Démarrage avec Docker 🐳
+### Starting with Docker 🐳
 
-**1. Démarrer l'application :**
+**1. Start the application:**
 ```bash
 ./scripts/docker-start.sh
 ```
 
-**2. Démarrer ngrok pour l'accès mobile :**
+**2. Start ngrok for mobile access:**
 ```bash
 ./scripts/start-ngrok.sh
 ```
 
-**Services disponibles :**
-- **Application VoD** : http://localhost
+**Available services:**
+- **VoD Application** : http://localhost
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **MinIO API** : http://localhost:9000
 - **ngrok Dashboard** : http://localhost:4040
 
-## 🌐 Utilisation
+## 🌐 Usage
 
-1. **Accéder à l'application** : http://localhost:8000
+1. **Access the application** : http://localhost:8000
 2. **API endpoints** :
-   - `GET /` : Interface web principale
-   - `GET /api/videos` : Liste toutes les vidéos
-   - `GET /api/video/{name}` : Stream une vidéo spécifique
-   - `GET /api/video/{name}/info` : Métadonnées d'une vidéo
+   - `GET /` : Main web interface
+   - `GET /api/videos` : List all videos
+   - `GET /api/video/{name}` : Stream a specific video
+   - `GET /api/video/{name}/info` : Video metadata
 
-## 📁 Structure du projet
+## 📁 Project Structure
 
 ```
 ICT3/
-├── main.py              # Backend FastAPI
-├── requirements.txt     # Dépendances Python
-├── create_bucket.py     # Création automatique bucket
-├── Dockerfile          # Image Docker application
-├── docker-compose.yml  # Orchestration Docker
-├── nginx.conf          # Configuration Nginx
+├── main.py              # FastAPI Backend
+├── requirements.txt     # Python Dependencies
+├── create_bucket.py     # Automatic bucket creation
+├── Dockerfile          # Docker application image
+├── docker-compose.yml  # Docker orchestration
+├── nginx.conf          # Nginx configuration
 ├── static/
-│   └── index.html      # Frontend HTML5
+│   └── index.html      # HTML5 Frontend
 ├── scripts/
-│   ├── docker-start.sh # Script démarrage Docker
-│   ├── docker-stop.sh  # Script arrêt Docker
-│   └── start-ngrok.sh  # Script ngrok pour mobile
+│   ├── docker-start.sh # Docker startup script
+│   ├── docker-stop.sh  # Docker stop script
+│   └── start-ngrok.sh  # ngrok script for mobile
 ├── assets/
-│   └── qr_codes/       # QR codes générés (vide)
-├── README.md           # Documentation principale
-└── SUBMISSION.md       # Rapport de soumission
+│   └── qr_codes/       # Generated QR codes (empty)
+├── README.md           # Main documentation
+└── SUBMISSION.md       # Submission report
 ```
 
-## 🎯 Fonctionnalités détaillées
+## 🎯 Detailed Features
 
 ### Backend (FastAPI)
-- Connexion sécurisée à MinIO
-- Streaming vidéo optimisé avec headers HTTP appropriés
-- Gestion d'erreurs robuste
-- API RESTful avec documentation automatique
+- Secure connection to MinIO
+- Optimized video streaming with appropriate HTTP headers
+- Robust error handling
+- RESTful API with automatic documentation
 
 ### Frontend (HTML5)
-- Interface responsive et moderne
-- Lecteur vidéo HTML5 natif
-- Liste des vidéos avec métadonnées
-- Statistiques en temps réel
-- Gestion d'erreurs utilisateur-friendly
+- Modern responsive interface
+- Native HTML5 video player
+- Video list with metadata
+- Real-time statistics
+- User-friendly error handling
 
-## 🔧 Configuration MinIO
+## 🔧 MinIO Configuration
 
-Assurez-vous que MinIO est configuré avec :
+Make sure MinIO is configured with:
 - **Endpoint** : `localhost:9000`
 - **Access Key** : `admin`
 - **Secret Key** : `admin123`
-- **Bucket** : `videos` (créé et contenant vos vidéos)
+- **Bucket** : `videos` (created and containing your videos)
 
-## 📱 Accès Mobile avec QR Codes
+## 📱 Mobile Access with QR Codes
 
-**Pour scanner les QR codes avec votre mobile :**
+**To scan QR codes with your mobile:**
 
-1. **Démarrer ngrok** : `./scripts/start-ngrok.sh`
-2. **Accéder aux QR codes** : http://localhost:8000/qr-codes
-3. **Scanner avec mobile** : Fonctionne depuis n'importe où !
+1. **Start ngrok** : `./scripts/start-ngrok.sh`
+2. **Access QR codes** : http://localhost:8000/qr-codes
+3. **Scan with mobile** : Works from anywhere!
 
-Les QR codes utilisent automatiquement l'URL ngrok publique pour un accès mobile optimal.
+QR codes automatically use the public ngrok URL for optimal mobile access.
 
-## 🛠️ Scripts utiles
+## 🛠️ Useful Scripts
 
-- **`./scripts/docker-start.sh`** : Démarrer l'application complète avec Docker
-- **`./scripts/docker-stop.sh`** : Arrêter tous les services Docker
-- **`./scripts/start-ngrok.sh`** : Démarrer ngrok pour accès mobile
-
-## 🚀 Prochaines étapes
-
-- [ ] Ajouter l'authentification utilisateur
-- [ ] Implémenter le streaming HLS/DASH
-- [ ] Ajouter la recherche et filtrage
-- [ ] Créer un système de playlists
-- [ ] Ajouter les sous-titres
-- [ ] Implémenter la compression vidéo automatique
+- **`./scripts/docker-start.sh`** : Start the complete application with Docker
+- **`./scripts/docker-stop.sh`** : Stop all Docker services
+- **`./scripts/start-ngrok.sh`** : Start ngrok for mobile access
