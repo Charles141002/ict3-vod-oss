@@ -18,39 +18,23 @@ Une application web complète pour le streaming de vidéos avec FastAPI et MinIO
 
 ## 🛠️ Installation
 
-### Option 1 : Docker (Recommandé) 🐳
+### Démarrage avec Docker 🐳
 
-**Démarrage rapide avec Docker Compose :**
+**1. Démarrer l'application :**
 ```bash
-# Démarrer l'application complète (MinIO + App + Nginx)
 ./scripts/docker-start.sh
+```
 
-# Accéder à l'interface
-# http://localhost (via Nginx)
-# http://localhost:8000 (direct FastAPI)
+**2. Démarrer ngrok pour l'accès mobile :**
+```bash
+./scripts/start-ngrok.sh
 ```
 
 **Services disponibles :**
 - **Application VoD** : http://localhost
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **MinIO API** : http://localhost:9000
-
-### Option 2 : Installation manuelle
-
-1. **Installer les dépendances** :
-```bash
-pip install -r requirements.txt
-```
-
-2. **Lancer l'application** :
-```bash
-python main.py
-```
-
-Ou avec uvicorn directement :
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
+- **ngrok Dashboard** : http://localhost:4040
 
 ## 🌐 Utilisation
 
@@ -67,27 +51,20 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ICT3/
 ├── main.py              # Backend FastAPI
 ├── requirements.txt     # Dépendances Python
-├── config.env          # Configuration
-├── .gitignore          # Fichiers à ignorer
+├── create_bucket.py     # Création automatique bucket
 ├── Dockerfile          # Image Docker application
 ├── docker-compose.yml  # Orchestration Docker
-├── docker-entrypoint.sh # Script d'entrée Docker
 ├── nginx.conf          # Configuration Nginx
-├── .dockerignore       # Fichiers ignorés par Docker
 ├── static/
 │   └── index.html      # Frontend HTML5
 ├── scripts/
-│   ├── start_ngrok.sh  # Script ngrok
-│   ├── restart_server.sh # Script redémarrage
 │   ├── docker-start.sh # Script démarrage Docker
-│   └── docker-stop.sh  # Script arrêt Docker
-├── docs/
-│   ├── TECHNICAL.md    # Documentation technique
-│   └── DOCKER.md       # Guide Docker
+│   ├── docker-stop.sh  # Script arrêt Docker
+│   └── start-ngrok.sh  # Script ngrok pour mobile
 ├── assets/
-│   └── qr_codes/       # QR codes générés
-└── data/
-    └── test.mp4        # Fichier vidéo d'exemple
+│   └── qr_codes/       # QR codes générés (vide)
+├── README.md           # Documentation principale
+└── SUBMISSION.md       # Rapport de soumission
 ```
 
 ## 🎯 Fonctionnalités détaillées
@@ -113,23 +90,21 @@ Assurez-vous que MinIO est configuré avec :
 - **Secret Key** : `admin123`
 - **Bucket** : `videos` (créé et contenant vos vidéos)
 
-## 🌐 Accès Mobile avec QR Codes
+## 📱 Accès Mobile avec QR Codes
 
-### Option 1 : Accès Local (même réseau WiFi)
-1. **Lancer l'application** : `python main.py`
+**Pour scanner les QR codes avec votre mobile :**
+
+1. **Démarrer ngrok** : `./scripts/start-ngrok.sh`
 2. **Accéder aux QR codes** : http://localhost:8000/qr-codes
-3. **Scanner avec mobile** : Fonctionne si le téléphone est sur le même WiFi
+3. **Scanner avec mobile** : Fonctionne depuis n'importe où !
 
-### Option 2 : Accès Public avec ngrok (recommandé)
-1. **Lancer l'application** : `python main.py`
-2. **Démarrer ngrok** : `./scripts/start_ngrok.sh` ou `ngrok http 8000`
-3. **Accéder aux QR codes** : http://localhost:8000/qr-codes
-4. **Scanner avec mobile** : Fonctionne depuis n'importe où !
+Les QR codes utilisent automatiquement l'URL ngrok publique pour un accès mobile optimal.
 
 ## 🛠️ Scripts utiles
 
-- **`./scripts/start_ngrok.sh`** : Démarrer ngrok pour accès public
-- **`./scripts/restart_server.sh`** : Redémarrer le serveur facilement
+- **`./scripts/docker-start.sh`** : Démarrer l'application complète avec Docker
+- **`./scripts/docker-stop.sh`** : Arrêter tous les services Docker
+- **`./scripts/start-ngrok.sh`** : Démarrer ngrok pour accès mobile
 
 ## 🚀 Prochaines étapes
 
