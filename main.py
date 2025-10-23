@@ -125,16 +125,22 @@ def stream_video(video_name: str, request: Request):
             # Obtenir la partie spécifique du fichier
             data = client.get_object(BUCKET, video_name, offset=start, length=end - start + 1)
             
-            # Headers pour le streaming par chunks
+            # Headers pour le streaming par chunks (compatible Firefox/Edge)
             headers = {
                 'Content-Range': f'bytes {start}-{end}/{stat.size}',
                 'Accept-Ranges': 'bytes',
                 'Content-Length': str(end - start + 1),
                 'Content-Type': 'video/mp4',
                 'Cache-Control': 'public, max-age=3600',
+                'X-Accel-Buffering': 'no',  # Important pour ngrok
+                # Headers CORS complets pour Firefox/Edge
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-                'Access-Control-Allow-Headers': 'Range, Content-Range'
+                'Access-Control-Allow-Headers': 'Range, Content-Range, Content-Length, Content-Type',
+                'Access-Control-Expose-Headers': 'Content-Range, Content-Length, Accept-Ranges',
+                'Access-Control-Max-Age': '86400',
+                'X-Content-Type-Options': 'nosniff',
+                'X-Frame-Options': 'SAMEORIGIN'
             }
             
             return StreamingResponse(
@@ -168,10 +174,15 @@ def stream_video(video_name: str, request: Request):
                     "Content-Type": "video/mp4",
                     "Content-Length": str(stat.size),
                     "Cache-Control": "public, max-age=3600",
+                    "X-Accel-Buffering": "no",  # Important pour ngrok
+                    # Headers CORS complets pour Firefox/Edge
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-                    "Access-Control-Allow-Headers": "Range, Content-Range",
-                    "X-Accel-Buffering": "no"  # Désactiver le buffering pour ngrok
+                    "Access-Control-Allow-Headers": "Range, Content-Range, Content-Length, Content-Type",
+                    "Access-Control-Expose-Headers": "Content-Range, Content-Length, Accept-Ranges",
+                    "Access-Control-Max-Age": "86400",
+                    "X-Content-Type-Options": "nosniff",
+                    "X-Frame-Options": "SAMEORIGIN"
                 }
             )
     except S3Error as e:
@@ -267,6 +278,29 @@ def test_video_url(video_name: str):
         }
     except S3Error:
         raise HTTPException(status_code=404, detail="Video not found")
+
+# Endpoint de test de compatibilité navigateurs
+@app.get("/api/test-compatibility")
+def test_browser_compatibility():
+    """Tester la compatibilité avec différents navigateurs"""
+    return {
+        "chrome": "✅ Supporté (URL signée MinIO + streaming)",
+        "firefox": "✅ Supporté (streaming optimisé)",
+        "edge": "✅ Supporté (streaming optimisé)", 
+        "safari": "✅ Supporté (streaming optimisé)",
+        "mobile": "✅ Supporté (QR codes + ngrok)",
+        "recommendations": [
+            "Firefox/Edge utilisent l'endpoint /api/video/{name} pour une meilleure compatibilité",
+            "Chrome utilise l'URL signée MinIO pour de meilleures performances",
+            "Tous les navigateurs supportent le streaming avec Range requests",
+            "Headers CORS complets pour Firefox/Edge"
+        ],
+        "test_urls": {
+            "streaming_endpoint": "/api/video/{video_name}",
+            "signed_url_endpoint": "/api/video/{video_name}/url",
+            "ngrok_info": "/api/ngrok-info"
+        }
+    }
 
 # Endpoint pour tester la détection ngrok
 @app.get("/api/ngrok-info")

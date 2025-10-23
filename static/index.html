@@ -467,24 +467,41 @@
                 // Charger la vidéo
                 const videoPlayer = document.getElementById('video-player');
                 
-                // Essayer d'abord l'URL signée MinIO
-                try {
-                    const urlResponse = await fetch(`/api/video/${videoName}/url`);
-                    if (urlResponse.ok) {
-                        const urlData = await urlResponse.json();
-                        console.log(`Utilisation de l'URL signée MinIO: ${urlData.url}`);
-                        videoPlayer.src = urlData.url;
-                    } else {
+                // Détecter le navigateur pour optimiser la compatibilité
+                const userAgent = navigator.userAgent.toLowerCase();
+                const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+                const isFirefox = userAgent.indexOf('firefox') > -1;
+                const isEdge = userAgent.indexOf('edg') > -1;
+                const isChrome = userAgent.indexOf('chrome') > -1 && !isEdge;
+                
+                console.log(`Navigateur détecté: Safari=${isSafari}, Firefox=${isFirefox}, Edge=${isEdge}, Chrome=${isChrome}`);
+                
+                // Stratégie de lecture selon le navigateur
+                if (isSafari || isFirefox || isEdge) {
+                    // Safari, Firefox, Edge : utiliser l'endpoint de streaming (plus compatible)
+                    const videoUrl = `/api/video/${videoName}`;
+                    console.log(`${isSafari ? 'Safari' : isFirefox ? 'Firefox' : 'Edge'} détecté - utilisation de l'endpoint de streaming: ${videoUrl}`);
+                    videoPlayer.src = videoUrl;
+                } else {
+                    // Chrome et autres : essayer d'abord l'URL signée MinIO
+                    try {
+                        const urlResponse = await fetch(`/api/video/${videoName}/url`);
+                        if (urlResponse.ok) {
+                            const urlData = await urlResponse.json();
+                            console.log(`Chrome détecté - utilisation de l'URL signée MinIO: ${urlData.url}`);
+                            videoPlayer.src = urlData.url;
+                        } else {
+                            // Fallback vers l'endpoint de streaming
+                            const videoUrl = `/api/video/${videoName}`;
+                            console.log(`Fallback vers l'endpoint de streaming: ${videoUrl}`);
+                            videoPlayer.src = videoUrl;
+                        }
+                    } catch (urlError) {
                         // Fallback vers l'endpoint de streaming
                         const videoUrl = `/api/video/${videoName}`;
-                        console.log(`Fallback vers l'endpoint de streaming: ${videoUrl}`);
+                        console.log(`Erreur URL signée, fallback vers: ${videoUrl}`, urlError);
                         videoPlayer.src = videoUrl;
                     }
-                } catch (urlError) {
-                    // Fallback vers l'endpoint de streaming
-                    const videoUrl = `/api/video/${videoName}`;
-                    console.log(`Erreur URL signée, fallback vers: ${videoUrl}`, urlError);
-                    videoPlayer.src = videoUrl;
                 }
                 
                 videoPlayer.load();
