@@ -349,9 +349,13 @@
 
             <div class="player-container">
                 <h2>▶️ Lecteur Vidéo</h2>
-                <video id="video-player" controls preload="metadata">
+                <video id="video-player" controls preload="metadata" 
+                       style="width: 100%; max-height: 400px; background: #000;">
                     <source src="" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo HTML5.
+                    <source src="" type="video/webm">
+                    <source src="" type="video/ogg">
+                    <p>Votre navigateur ne supporte pas la lecture vidéo HTML5.</p>
+                    <p>Essayez avec un navigateur plus récent ou téléchargez la vidéo.</p>
                 </video>
                 <div id="video-info" style="margin-top: 15px; color: #718096; font-size: 0.9rem;"></div>
             </div>
@@ -500,6 +504,24 @@
                     console.error('Erreur de lecture vidéo:', e);
                     console.error('Code d\'erreur:', videoPlayer.error?.code);
                     console.error('Message d\'erreur:', videoPlayer.error?.message);
+                    
+                    // Message d'erreur plus informatif
+                    const errorMessages = {
+                        1: 'Abandon du chargement',
+                        2: 'Erreur réseau',
+                        3: 'Erreur de décodage',
+                        4: 'Format non supporté'
+                    };
+                    
+                    const errorCode = videoPlayer.error?.code;
+                    const errorMsg = errorMessages[errorCode] || 'Erreur inconnue';
+                    
+                    document.getElementById('video-info').innerHTML = 
+                        `<div class="error" style="color: #e53e3e; padding: 10px; background: #fed7d7; border-radius: 5px;">
+                            ❌ Erreur de lecture: ${errorMsg}<br>
+                            <small>Code: ${errorCode} | Message: ${videoPlayer.error?.message}</small><br>
+                            <small>💡 Essayez un autre navigateur ou vérifiez le format de la vidéo</small>
+                        </div>`;
                 });
                 
             } catch (error) {
