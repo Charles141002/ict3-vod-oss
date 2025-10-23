@@ -43,7 +43,10 @@
 
 ### Startup
 ```bash
-# Configure ngrok credentials in docker-compose.yml
+# Configure ngrok credentials in .env file
+cp env.example .env
+# Edit .env and add your NGROK_AUTHTOKEN
+
 # Then start the complete application (including ngrok)
 ./scripts/docker-start.sh
 ```

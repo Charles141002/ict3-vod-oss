@@ -25,9 +25,11 @@ A complete web application for video streaming with FastAPI and MinIO.
 
 **1. Configure ngrok (one-time setup):**
 ```bash
-# Update docker-compose.yml with your ngrok credentials:
-# - NGROK_AUTHTOKEN=your_token
-# - --url=your-custom-subdomain.ngrok-free.dev
+# Copy the example environment file
+cp env.example .env
+
+# Edit .env and add your ngrok token
+# NGROK_AUTHTOKEN=your_token_here
 ```
 
 **2. Start the complete application:**
