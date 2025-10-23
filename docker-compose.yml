@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # MinIO Server
+  minio:
+    image: minio/minio:latest
+    container_name: vod-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - vod-network
+
+  # Application VoD
+  vod-app:
+    build: .
+    container_name: vod-app
+    ports:
+      - "8000:8000"
+    environment:
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin123
+      MINIO_SECURE: "false"
+      MINIO_BUCKET: videos
+    depends_on:
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data:ro
+      - ./assets:/app/assets
+    networks:
+      - vod-network
+    restart: unless-stopped
+
+  # Nginx (optionnel pour le reverse proxy)
+  nginx:
+    image: nginx:alpine
+    container_name: vod-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - vod-app
+    networks:
+      - vod-network
+    restart: unless-stopped
+
+volumes:
+  minio_data:
+
+networks:
+  vod-network:
+    driver: bridge

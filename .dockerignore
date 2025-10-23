@@ -1,0 +1,67 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Documentation (optionnel - peut être inclus)
+docs/
+
+# Assets temporaires
+assets/qr_codes/*.png
+
+# Fichiers de test
+test_*.png
+test_*.mp4
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Scripts de développement
+scripts/
+
+# Fichiers temporaires
+*.tmp
+*.temp

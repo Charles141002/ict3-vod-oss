@@ -14,15 +14,20 @@ import uuid
 
 app = FastAPI(title="VoD App", description="Video-on-Demand Application")
 
+# Configuration MinIO depuis les variables d'environnement
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "localhost:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "admin")
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "admin123")
+MINIO_SECURE = os.getenv("MINIO_SECURE", "false").lower() == "true"
+BUCKET = os.getenv("MINIO_BUCKET", "videos")
+
 # Connexion à MinIO
 client = Minio(
-    "localhost:9000",
-    access_key="admin",
-    secret_key="admin123",
-    secure=False
+    MINIO_ENDPOINT,
+    access_key=MINIO_ACCESS_KEY,
+    secret_key=MINIO_SECRET_KEY,
+    secure=MINIO_SECURE
 )
-
-BUCKET = "videos"
 
 # Servir les fichiers statiques (HTML, CSS, JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")

@@ -18,6 +18,25 @@ Une application web complète pour le streaming de vidéos avec FastAPI et MinIO
 
 ## 🛠️ Installation
 
+### Option 1 : Docker (Recommandé) 🐳
+
+**Démarrage rapide avec Docker Compose :**
+```bash
+# Démarrer l'application complète (MinIO + App + Nginx)
+./scripts/docker-start.sh
+
+# Accéder à l'interface
+# http://localhost (via Nginx)
+# http://localhost:8000 (direct FastAPI)
+```
+
+**Services disponibles :**
+- **Application VoD** : http://localhost
+- **MinIO Console** : http://localhost/minio/ (admin/admin123)
+- **MinIO API** : http://localhost:9000
+
+### Option 2 : Installation manuelle
+
 1. **Installer les dépendances** :
 ```bash
 pip install -r requirements.txt
@@ -50,13 +69,21 @@ ICT3/
 ├── requirements.txt     # Dépendances Python
 ├── config.env          # Configuration
 ├── .gitignore          # Fichiers à ignorer
+├── Dockerfile          # Image Docker application
+├── docker-compose.yml  # Orchestration Docker
+├── docker-entrypoint.sh # Script d'entrée Docker
+├── nginx.conf          # Configuration Nginx
+├── .dockerignore       # Fichiers ignorés par Docker
 ├── static/
 │   └── index.html      # Frontend HTML5
 ├── scripts/
 │   ├── start_ngrok.sh  # Script ngrok
-│   └── restart_server.sh # Script redémarrage
+│   ├── restart_server.sh # Script redémarrage
+│   ├── docker-start.sh # Script démarrage Docker
+│   └── docker-stop.sh  # Script arrêt Docker
 ├── docs/
-│   └── TECHNICAL.md    # Documentation technique
+│   ├── TECHNICAL.md    # Documentation technique
+│   └── DOCKER.md       # Guide Docker
 ├── assets/
 │   └── qr_codes/       # QR codes générés
 └── data/
