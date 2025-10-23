@@ -268,6 +268,18 @@ def test_video_url(video_name: str):
     except S3Error:
         raise HTTPException(status_code=404, detail="Video not found")
 
+# Endpoint pour tester la détection ngrok
+@app.get("/api/ngrok-info")
+def get_ngrok_info():
+    """Obtenir les informations ngrok pour debug"""
+    ngrok_url = get_ngrok_url()
+    return {
+        "ngrok_url": ngrok_url,
+        "ngrok_detected": ngrok_url is not None,
+        "local_ip": get_local_ip(),
+        "message": "ngrok URL détectée automatiquement" if ngrok_url else "ngrok non détecté"
+    }
+
 # Endpoint de test pour diagnostiquer les problèmes
 @app.get("/test/{video_name}")
 def test_video_access(video_name: str):
