@@ -7,7 +7,7 @@
 
 **VoD (Video on Demand) Application** - Modern video streaming platform with Docker and mobile access via QR codes.
 
-## 🎯 Main Features
+# 🎯 Main Features
 
 ### ✅ Backend (FastAPI)
 - **REST API** : Complete video management
