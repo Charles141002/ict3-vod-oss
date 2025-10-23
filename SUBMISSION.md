@@ -87,15 +87,3 @@
 - ✅ **Robust architecture** : Docker + health checks
 - ✅ **Modern interface** : Responsive and intuitive design
 
-## 🔮 Future Perspectives
-
-- **Authentication** : User login system
-- **Advanced streaming** : HLS/DASH for adaptive quality
-- **Admin interface** : Advanced video management
-- **Metadata** : Automatic information extraction
-
----
-
-**Submission Date** : $(date)  
-**Version** : 1.0  
-**Status** : ✅ Functional and deployable
