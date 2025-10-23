@@ -39,11 +39,12 @@
 
 ### Prerequisites
 - Docker
-- Optional: ngrok authentication token for unlimited tunnels
+- ngrok free account with auth token
 
 ### Startup
 ```bash
-# Start the complete application (including ngrok)
+# Configure ngrok credentials in docker-compose.yml
+# Then start the complete application (including ngrok)
 ./scripts/docker-start.sh
 ```
 
@@ -51,12 +52,13 @@
 - **VoD Application** : http://localhost
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **ngrok Dashboard** : http://localhost:4040
+- **Public URL** : https://ashely-unreflecting-franklin.ngrok-free.dev
 
 ## 📱 Mobile Access
 
 1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
-3. **Scan with mobile** : Works from anywhere!
+3. **Scan with mobile** : Works from anywhere via https://ashely-unreflecting-franklin.ngrok-free.dev
 
 ## 🎓 Technical Learnings
 

@@ -14,16 +14,23 @@ A complete web application for video streaming with FastAPI and MinIO.
 
 - **Docker** : For the complete application (including ngrok)
 
-### Optional: ngrok Authentication Token
-- Sign up at [ngrok.com](https://ngrok.com) for a free account
-- Get your authtoken for unlimited tunnels
-- Set it as environment variable: `export NGROK_AUTHTOKEN=your_token`
+### ngrok Configuration
+- **Free account** : Sign up at [ngrok.com](https://ngrok.com) for a free account
+- **Auth token** : Get your authtoken from the dashboard
+- **Custom URL** : Optional custom subdomain for consistent access
 
 ## 🛠️ Installation
 
 ### Starting with Docker 🐳
 
-**1. Start the complete application (including ngrok):**
+**1. Configure ngrok (one-time setup):**
+```bash
+# Update docker-compose.yml with your ngrok credentials:
+# - NGROK_AUTHTOKEN=your_token
+# - --url=your-custom-subdomain.ngrok-free.dev
+```
+
+**2. Start the complete application:**
 ```bash
 ./scripts/docker-start.sh
 ```
@@ -33,6 +40,7 @@ A complete web application for video streaming with FastAPI and MinIO.
 - **MinIO Console** : http://localhost/minio/ (admin/admin123)
 - **MinIO API** : http://localhost:9000
 - **ngrok Dashboard** : http://localhost:4040
+- **Public URL** : https://ashely-unreflecting-franklin.ngrok-free.dev
 
 ## 🌐 Usage
 
@@ -57,7 +65,8 @@ ICT3/
 │   └── index.html      # HTML5 Frontend
 ├── scripts/
 │   ├── docker-start.sh # Docker startup script (includes ngrok)
-│   └── docker-stop.sh  # Docker stop script
+│   ├── docker-stop.sh  # Docker stop script
+│   └── start-ngrok.sh  # Local ngrok script (backup)
 ├── assets/
 │   └── qr_codes/       # Generated QR codes (empty)
 ├── README.md           # Main documentation
@@ -93,7 +102,7 @@ Make sure MinIO is configured with:
 
 1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
-3. **Scan with mobile** : Works from anywhere!
+3. **Scan with mobile** : Works from anywhere via https://ashely-unreflecting-franklin.ngrok-free.dev
 
 QR codes automatically use the public ngrok URL for optimal mobile access.
 
