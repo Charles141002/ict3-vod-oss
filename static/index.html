@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoD App - Video on Demand</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .video-list {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .video-list h2 {
+            margin-bottom: 20px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .video-item {
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f7fafc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .video-item:hover {
+            background: #edf2f7;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .video-item.active {
+            background: #e6fffa;
+            border-left-color: #38b2ac;
+        }
+
+        .video-qr-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .video-qr-section h4 {
+            margin-bottom: 10px;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .video-qr-section img {
+            max-width: 120px;
+            height: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .qr-instructions {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .toggle-qr-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-qr-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .qr-hidden .video-qr-section {
+            display: none;
+        }
+
+        .upload-section {
+            background: #f0f8ff;
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            background: #e6f3ff;
+            border-color: #5a67d8;
+        }
+
+        .upload-section.dragover {
+            background: #e6f3ff;
+            border-color: #38b2ac;
+            transform: scale(1.02);
+        }
+
+        .upload-btn {
+            background: #38b2ac;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .upload-btn:hover {
+            background: #319795;
+            transform: translateY(-2px);
+        }
+
+        .upload-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-progress {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #38b2ac;
+            transition: width 0.3s ease;
+        }
+
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .upload-success {
+            color: #38b2ac;
+        }
+
+        .upload-error {
+            color: #e53e3e;
+        }
+
+        .video-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .video-info {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .player-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .player-container h2 {
+            margin-bottom: 20px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .no-videos {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .stats {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .stats h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: inline-block;
+            margin: 0 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 VoD App</h1>
+            <p>Votre plateforme Video-on-Demand avec QR Codes intégrés</p>
+        </div>
+
+        <div class="main-content">
+            <div class="video-list">
+                <h2>📁 Bibliothèque Vidéo</h2>
+                
+                <!-- Section d'upload -->
+                <div class="upload-section" id="upload-section">
+                    <h3>📤 Ajouter une vidéo</h3>
+                    <p>Glissez-déposez un fichier vidéo ou cliquez pour sélectionner (upload automatique)</p>
+                    <input type="file" id="file-input" class="file-input" accept="video/*" onchange="handleFileSelect(event)">
+                    <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+                        📁 Choisir un fichier
+                    </button>                    
+                    <div class="upload-progress" id="upload-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="upload-status" id="upload-status"></div>
+                    </div>
+                </div>
+                
+                <button id="toggle-qr-btn" class="toggle-qr-btn" onclick="toggleQRCodes()">📱 Masquer QR Codes</button>
+                <div id="video-list-container">
+                    <div class="loading">Chargement des vidéos...</div>
+                </div>
+            </div>
+
+            <div class="player-container">
+                <h2>▶️ Lecteur Vidéo</h2>
+                <video id="video-player" controls preload="metadata">
+                    <source src="" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo HTML5.
+                </video>
+                <div id="video-info" style="margin-top: 15px; color: #718096; font-size: 0.9rem;"></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>📊 Statistiques</h3>
+            <div class="stat-item">
+                <div class="stat-number" id="total-videos">0</div>
+                <div class="stat-label">Vidéos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="total-size">0 MB</div>
+                <div class="stat-label">Taille totale</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let videos = [];
+        let currentVideo = null;
+
+        // Fonction pour formater la taille des fichiers
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Fonction pour formater la date
+        function formatDate(dateString) {
+            if (!dateString) return 'Date inconnue';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Charger la liste des vidéos
+        async function loadVideos() {
+            try {
+                const response = await fetch('/api/videos');
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                videos = await response.json();
+                displayVideos();
+                updateStats();
+            } catch (error) {
+                console.error('Erreur lors du chargement des vidéos:', error);
+                document.getElementById('video-list-container').innerHTML = 
+                    `<div class="error">Erreur lors du chargement des vidéos: ${error.message}</div>`;
+            }
+        }
+
+        // Afficher la liste des vidéos
+        function displayVideos() {
+            const container = document.getElementById('video-list-container');
+            
+            if (videos.length === 0) {
+                container.innerHTML = '<div class="no-videos">Aucune vidéo trouvée dans votre bibliothèque.</div>';
+                return;
+            }
+
+            container.innerHTML = videos.map(video => `
+                <div class="video-item" onclick="playVideo('${video.name}')" data-video="${video.name}">
+                    <div class="video-name">${video.name}</div>
+                    <div class="video-info">
+                        Taille: ${formatFileSize(video.size)}<br>
+                        Modifié: ${formatDate(video.last_modified)}
+                    </div>
+                    <div class="video-qr-section">
+                        <h4>📱 QR Code Mobile</h4>
+                        <img src="/qr/${video.name}" alt="QR Code pour ${video.name}" onerror="this.style.display='none'">
+                        <div class="qr-instructions">Scannez avec votre téléphone</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Jouer une vidéo
+        async function playVideo(videoName) {
+            try {
+                console.log(`Tentative de lecture de la vidéo: ${videoName}`);
+                
+                // Mettre à jour l'interface
+                document.querySelectorAll('.video-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`[data-video="${videoName}"]`).classList.add('active');
+
+                // Charger les informations de la vidéo
+                const response = await fetch(`/api/video/${videoName}/info`);
+                if (response.ok) {
+                    const videoInfo = await response.json();
+                    document.getElementById('video-info').innerHTML = `
+                        <strong>${videoInfo.name}</strong><br>
+                        Taille: ${formatFileSize(videoInfo.size)} | 
+                        Modifié: ${formatDate(videoInfo.last_modified)}
+                    `;
+                }
+
+                // Charger la vidéo
+                const videoPlayer = document.getElementById('video-player');
+                
+                // Essayer d'abord l'URL signée MinIO
+                try {
+                    const urlResponse = await fetch(`/api/video/${videoName}/url`);
+                    if (urlResponse.ok) {
+                        const urlData = await urlResponse.json();
+                        console.log(`Utilisation de l'URL signée MinIO: ${urlData.url}`);
+                        videoPlayer.src = urlData.url;
+                    } else {
+                        // Fallback vers l'endpoint de streaming
+                        const videoUrl = `/api/video/${videoName}`;
+                        console.log(`Fallback vers l'endpoint de streaming: ${videoUrl}`);
+                        videoPlayer.src = videoUrl;
+                    }
+                } catch (urlError) {
+                    // Fallback vers l'endpoint de streaming
+                    const videoUrl = `/api/video/${videoName}`;
+                    console.log(`Erreur URL signée, fallback vers: ${videoUrl}`, urlError);
+                    videoPlayer.src = videoUrl;
+                }
+                
+                videoPlayer.load();
+                
+                currentVideo = videoName;
+                
+                // Ajouter des événements de débogage
+                videoPlayer.addEventListener('loadstart', () => {
+                    console.log('Début du chargement de la vidéo');
+                });
+                
+                videoPlayer.addEventListener('canplay', () => {
+                    console.log('La vidéo peut commencer à jouer');
+                });
+                
+                videoPlayer.addEventListener('error', (e) => {
+                    console.error('Erreur de lecture vidéo:', e);
+                    console.error('Code d\'erreur:', videoPlayer.error?.code);
+                    console.error('Message d\'erreur:', videoPlayer.error?.message);
+                });
+                
+            } catch (error) {
+                console.error('Erreur lors de la lecture de la vidéo:', error);
+                document.getElementById('video-info').innerHTML = 
+                    `<div class="error">Erreur lors de la lecture de la vidéo: ${error.message}</div>`;
+            }
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats() {
+            const totalVideos = videos.length;
+            const totalSize = videos.reduce((sum, video) => sum + video.size, 0);
+            
+            document.getElementById('total-videos').textContent = totalVideos;
+            document.getElementById('total-size').textContent = formatFileSize(totalSize);
+        }
+
+        // Gestion des erreurs de lecture vidéo
+        document.getElementById('video-player').addEventListener('error', function(e) {
+            console.error('Erreur de lecture vidéo:', e);
+            document.getElementById('video-info').innerHTML = 
+                '<div class="error">Erreur lors de la lecture de la vidéo. Vérifiez que le fichier existe et est accessible.</div>';
+        });
+
+        // Basculer l'affichage des QR codes
+        function toggleQRCodes() {
+            const container = document.getElementById('video-list-container');
+            const btn = document.getElementById('toggle-qr-btn');
+            
+            container.classList.toggle('qr-hidden');
+            
+            if (container.classList.contains('qr-hidden')) {
+                btn.textContent = '📱 Afficher QR Codes';
+            } else {
+                btn.textContent = '📱 Masquer QR Codes';
+            }
+        }
+
+        // Variables pour l'upload
+        let selectedFile = null;
+
+        // Gérer la sélection de fichier
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                document.getElementById('upload-status').textContent = `Fichier sélectionné: ${file.name} (${formatFileSize(file.size)})`;
+                document.getElementById('upload-status').className = 'upload-status';
+                
+                // Upload automatique dès qu'un fichier est sélectionné
+                uploadVideo();
+            }
+        }
+
+        // Upload de la vidéo
+        async function uploadVideo() {
+            if (!selectedFile) return;
+
+            const progressDiv = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const statusDiv = document.getElementById('upload-status');
+
+            // Afficher le progrès
+            progressDiv.style.display = 'block';
+            statusDiv.textContent = 'Upload en cours...';
+            statusDiv.className = 'upload-status';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    progressFill.style.width = '100%';
+                    statusDiv.textContent = `✅ ${result.message}`;
+                    statusDiv.className = 'upload-status upload-success';
+                    
+                    // Recharger la liste des vidéos
+                    setTimeout(() => {
+                        loadVideos();
+                        resetUploadForm();
+                    }, 2000);
+                } else {
+                    const error = await response.json();
+                    statusDiv.textContent = `❌ Erreur: ${error.detail}`;
+                    statusDiv.className = 'upload-status upload-error';
+                }
+            } catch (error) {
+                statusDiv.textContent = `❌ Erreur de connexion: ${error.message}`;
+                statusDiv.className = 'upload-status upload-error';
+            }
+        }
+
+        // Réinitialiser le formulaire d'upload
+        function resetUploadForm() {
+            selectedFile = null;
+            document.getElementById('file-input').value = '';
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('upload-status').textContent = '';
+        }
+
+        // Gérer le drag & drop
+        function setupDragAndDrop() {
+            const uploadSection = document.getElementById('upload-section');
+            
+            uploadSection.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadSection.classList.add('dragover');
+            });
+            
+            uploadSection.addEventListener('dragleave', () => {
+                uploadSection.classList.remove('dragover');
+            });
+            
+            uploadSection.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadSection.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type.startsWith('video/')) {
+                        selectedFile = file;
+                        document.getElementById('upload-status').textContent = `Fichier sélectionné: ${file.name} (${formatFileSize(file.size)})`;
+                        document.getElementById('upload-status').className = 'upload-status';
+                        
+                        // Upload automatique dès qu'un fichier est glissé-déposé
+                        uploadVideo();
+                    } else {
+                        alert('Veuillez sélectionner un fichier vidéo');
+                    }
+                }
+            });
+        }
+
+        // Charger les vidéos au démarrage
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVideos();
+            setupDragAndDrop();
+        });
+    </script>
+</body>
+</html>
