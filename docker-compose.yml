@@ -58,6 +58,21 @@ services:
       - vod-network
     restart: unless-stopped
 
+  # ngrok for mobile access
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: vod-ngrok
+    command: ["http", "--url=ashely-unreflecting-franklin.ngrok-free.dev", "vod-app:8000"]
+    environment:
+      - NGROK_AUTHTOKEN=34RxNQoUMTDwhMziFd1Ov570ljx_L2oc6j4PSkWmTbw1XFpS
+    ports:
+      - "4040:4040"
+    depends_on:
+      - vod-app
+    networks:
+      - vod-network
+    restart: unless-stopped
+
 volumes:
   minio_data:
 

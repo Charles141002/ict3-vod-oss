@@ -39,19 +39,12 @@
 
 ### Prerequisites
 - Docker
-- ngrok (for mobile access)
+- Optional: ngrok authentication token for unlimited tunnels
 
 ### Startup
 ```bash
-# 1. Start the application
+# Start the complete application (including ngrok)
 ./scripts/docker-start.sh
-
-# 2. Start ngrok (for mobile)
-./scripts/start-ngrok.sh
-
-# 3. Access the interface
-# http://localhost (via Nginx)
-# http://localhost:8000 (direct FastAPI)
 ```
 
 ### Available Services
@@ -61,7 +54,7 @@
 
 ## 📱 Mobile Access
 
-1. **Start ngrok** : `./scripts/start-ngrok.sh`
+1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
 3. **Scan with mobile** : Works from anywhere!
 

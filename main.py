@@ -52,17 +52,30 @@ def get_range_header(request: Request) -> Optional[str]:
         return None
 
 def get_ngrok_url() -> Optional[str]:
-    """Obtenir l'URL publique ngrok"""
+    """Get public ngrok URL from Docker service"""
     try:
+        # Try Docker ngrok service first
+        response = requests.get("http://ngrok:4040/api/tunnels", timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            for tunnel in data.get('tunnels', []):
+                if tunnel.get('proto') == 'https':
+                    return tunnel.get('public_url')
+    except:
+        pass
+    
+    try:
+        # Fallback to localhost (for development)
         response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
         if response.status_code == 200:
             data = response.json()
             for tunnel in data.get('tunnels', []):
                 if tunnel.get('proto') == 'https':
                     return tunnel.get('public_url')
-        return None
     except:
-        return None
+        pass
+    
+    return None
 
 # Route principale - servir l'index.html
 @app.get("/")

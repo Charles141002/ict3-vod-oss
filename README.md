@@ -12,38 +12,20 @@ A complete web application for video streaming with FastAPI and MinIO.
 
 ## 📋 Prerequisites
 
-- **Docker** : For the complete application
-- **ngrok** : For mobile access (optional)
+- **Docker** : For the complete application (including ngrok)
 
-### Installing ngrok
-
-**macOS :**
-```bash
-brew install ngrok/ngrok/ngrok
-```
-
-**Linux :**
-```bash
-curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-echo 'deb https://ngrok-agent.s3.amazonaws.com buster main' | sudo tee /etc/apt/sources.list.d/ngrok.list
-sudo apt update && sudo apt install ngrok
-```
-
-**Windows :**
-Download from [ngrok.com/download](https://ngrok.com/download)
+### Optional: ngrok Authentication Token
+- Sign up at [ngrok.com](https://ngrok.com) for a free account
+- Get your authtoken for unlimited tunnels
+- Set it as environment variable: `export NGROK_AUTHTOKEN=your_token`
 
 ## 🛠️ Installation
 
 ### Starting with Docker 🐳
 
-**1. Start the application:**
+**1. Start the complete application (including ngrok):**
 ```bash
 ./scripts/docker-start.sh
-```
-
-**2. Start ngrok for mobile access:**
-```bash
-./scripts/start-ngrok.sh
 ```
 
 **Available services:**
@@ -74,9 +56,8 @@ ICT3/
 ├── static/
 │   └── index.html      # HTML5 Frontend
 ├── scripts/
-│   ├── docker-start.sh # Docker startup script
-│   ├── docker-stop.sh  # Docker stop script
-│   └── start-ngrok.sh  # ngrok script for mobile
+│   ├── docker-start.sh # Docker startup script (includes ngrok)
+│   └── docker-stop.sh  # Docker stop script
 ├── assets/
 │   └── qr_codes/       # Generated QR codes (empty)
 ├── README.md           # Main documentation
@@ -110,7 +91,7 @@ Make sure MinIO is configured with:
 
 **To scan QR codes with your mobile:**
 
-1. **Start ngrok** : `./scripts/start-ngrok.sh`
+1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
 2. **Access QR codes** : http://localhost:8000/qr-codes
 3. **Scan with mobile** : Works from anywhere!
 
@@ -118,6 +99,5 @@ QR codes automatically use the public ngrok URL for optimal mobile access.
 
 ## 🛠️ Useful Scripts
 
-- **`./scripts/docker-start.sh`** : Start the complete application with Docker
+- **`./scripts/docker-start.sh`** : Start the complete application with Docker (includes ngrok)
 - **`./scripts/docker-stop.sh`** : Stop all Docker services
-- **`./scripts/start-ngrok.sh`** : Start ngrok for mobile access
