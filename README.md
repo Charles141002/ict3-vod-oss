@@ -1,128 +1,46 @@
-# VoD App - Video on Demand
+# VoD App 🎬
 
-A complete web application for video streaming with FastAPI and MinIO.
+A simple Video on Demand project that allows you to upload, stream videos, and generate QR codes to watch them on mobile.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- **FastAPI Backend** : REST API for video management
-- **HTML5 Frontend** : Modern and responsive user interface
-- **Video streaming** : Direct playback from MinIO
-- **Metadata management** : Video file information
-- **Intuitive interface** : Modern design with statistics
+1.  **Prerequisites**:
+    *   Have Docker and Docker Compose installed.
+    *   **Important**: Create an account on [ngrok.com](https://ngrok.com) and get your authtoken so QR codes work on mobile.
 
-## 📋 Prerequisites
+2.  **Configuration**:
+    *   Copy the example file: `cp env.example .env`
+    *   Add your token in the `.env` file: `NGROK_AUTHTOKEN=your_token_here`
 
-- **Docker** : For the complete application (including ngrok)
+3.  **Start**:
+    ```bash
+    ./scripts/docker-start.sh
+    ```
+    *Or simply `docker-compose up --build`*
 
-### ngrok Configuration
-- **Free account** : Sign up at [ngrok.com](https://ngrok.com) for a free account
-- **Auth token** : Get your authtoken from the dashboard
-- **Custom URL** : Optional custom subdomain for consistent access
+4.  **Access**:
+    *   Web App: [http://localhost:8000](http://localhost:8000)
+    *   MinIO Console (Storage): [http://localhost:9001](http://localhost:9001) (Login: `admin` / Pass: `admin123`)
 
-## 🛠️ Installation
+## ⚙️ How it works
 
-### Starting with Docker 🐳
+1.  **Storage**: Videos are stored in a **MinIO** bucket (S3 compatible).
+2.  **Streaming**: The **FastAPI** backend streams videos in chunks to avoid loading everything into memory. It handles "Range Requests" to allow seeking forward/backward in the video.
+3.  **Mobile Access**: **Ngrok** creates a secure tunnel to your local PC, allowing generation of QR codes scannable from any smartphone (even on 4G).
 
-**1. Configure ngrok (one-time setup):**
-```bash
-# Copy the example environment file
-cp env.example .env
+## 🛠 Tech Stack
 
-# Edit .env and add your ngrok token
-# NGROK_AUTHTOKEN=your_token_here
-```
+*   **Backend**: Python + FastAPI (fast & async)
+*   **Storage**: MinIO (S3 Object Storage)
+*   **Containerization**: Docker & Docker Compose
+*   **Tools**:
+    *   `qrcode`: QR code generation
+    *   `ngrok`: Internet exposure for mobile testing
+    *   `uvicorn`: ASGI Server
 
-**2. Start the complete application:**
-```bash
-./scripts/docker-start.sh
-```
+## ✨ Features
 
-**Available services:**
-- **VoD Application** : http://localhost
-- **MinIO Console** : http://localhost/minio/ (admin/admin123)
-- **MinIO API** : http://localhost:9000
-- **ngrok Dashboard** : http://localhost:4040
-- **Public URL** : Check ngrok dashboard for your unique URL
-
-## 🌐 Usage
-
-1. **Access the application** : http://localhost:8000
-2. **API endpoints** :
-   - `GET /` : Main web interface
-   - `GET /api/videos` : List all videos
-   - `GET /api/video/{name}` : Stream a specific video
-   - `GET /api/video/{name}/info` : Video metadata
-
-## 📁 Project Structure
-
-```
-ICT3/
-├── main.py              # FastAPI Backend
-├── requirements.txt     # Python Dependencies
-├── create_bucket.py     # Automatic bucket creation
-├── Dockerfile          # Docker application image
-├── docker-compose.yml  # Docker orchestration
-├── nginx.conf          # Nginx configuration
-├── static/
-│   └── index.html      # HTML5 Frontend
-├── scripts/
-│   ├── docker-start.sh # Docker startup script (includes ngrok)
-│   ├── docker-stop.sh  # Docker stop script
-│   └── start-ngrok.sh  # Local ngrok script (backup)
-├── assets/
-│   └── qr_codes/       # Generated QR codes (empty)
-├── README.md           # Main documentation
-└── SUBMISSION.md       # Submission report
-```
-
-## 🎯 Detailed Features
-
-### Backend (FastAPI)
-- Secure connection to MinIO
-- Optimized video streaming with appropriate HTTP headers
-- Robust error handling
-- RESTful API with automatic documentation
-
-### Frontend (HTML5)
-- Modern responsive interface
-- Native HTML5 video player
-- Video list with metadata
-- Real-time statistics
-- User-friendly error handling
-
-## 🔧 MinIO Configuration
-
-Make sure MinIO is configured with:
-- **Endpoint** : `localhost:9000`
-- **Access Key** : `admin`
-- **Secret Key** : `admin123`
-- **Bucket** : `videos` (created and containing your videos)
-
-## 📱 Mobile Access with QR Codes
-
-**To scan QR codes with your mobile:**
-
-1. **Start the application** : `./scripts/docker-start.sh` (includes ngrok)
-2. **Access QR codes** : http://localhost:8000/qr-codes
-3. **Scan with mobile** : Works from anywhere via your ngrok URL
-4. **Find your ngrok URL** : Check http://localhost:4040
-
-QR codes automatically use the public ngrok URL for optimal mobile access.
-
-### Finding Your ngrok URL
-
-After starting the application, you can find your unique ngrok URL by:
-
-1. **ngrok Dashboard** : http://localhost:4040
-2. **API endpoint** : `curl http://localhost:4040/api/tunnels`
-3. **QR codes page** : http://localhost:8000/qr-codes (shows the URL)
-
-Each ngrok account gets a unique URL like:
-- `https://abc123.ngrok-free.dev`
-- `https://xyz789.ngrok-free.dev`
-- etc.
-
-## 🛠️ Useful Scripts
-
-- **`./scripts/docker-start.sh`** : Start the complete application with Docker (includes ngrok)
-- **`./scripts/docker-stop.sh`** : Stop all Docker services
+*   Video upload (drag & drop)
+*   Smooth video streaming (supports Range requests)
+*   Automatic QR Code generation
+*   Supports all browsers (Chrome, Firefox, Safari, Mobile)
